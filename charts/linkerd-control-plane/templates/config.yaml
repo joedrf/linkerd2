@@ -36,4 +36,18 @@ data:
   {{- $_ := unset $values "partials"}}
   {{- $_ := unset $values "configs"}}
   {{- $_ := unset $values "stage"}}
+  {{- /* EKS addon compatibility: values.yaml uses repository/tag for AWS
+         image traceability, but the proxy-injector Go code expects the
+         original field names (controllerImage as flat "repo:tag" string,
+         proxy.image.name/.version). Remap before serialising to the
+         ConfigMap. */ -}}
+  {{- if kindIs "map" $values.controllerImage -}}
+    {{- $_ := set $values "controllerImage" (printf "%s:%s" $values.controllerImage.repository $values.controllerImage.tag) }}
+  {{- end -}}
+  {{- if and (hasKey $values.proxy.image "repository") (not (hasKey $values.proxy.image "name")) -}}
+    {{- $_ := set $values.proxy.image "name" $values.proxy.image.repository }}
+    {{- $_ := set $values.proxy.image "version" (default $values.linkerdVersion $values.proxy.image.tag) }}
+    {{- $_ := unset $values.proxy.image "repository" }}
+    {{- $_ := unset $values.proxy.image "tag" }}
+  {{- end -}}
   {{- toYaml $values | trim | nindent 4 }}
