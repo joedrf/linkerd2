@@ -55,7 +55,7 @@ spec:
           automountServiceAccountToken: false
           containers:
           - name: heartbeat
-            image: {{.Values.controllerImage}}:{{.Values.controllerImageVersion | default .Values.linkerdVersion}}
+            image: {{.Values.controllerImage.repository}}:{{.Values.controllerImage.tag}}
             imagePullPolicy: {{.Values.imagePullPolicy}}
             env:
             - name: LINKERD_DISABLED

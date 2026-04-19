@@ -46,7 +46,7 @@ args:
 - --subnets-to-ignore
 - {{ .Values.proxyInit.skipSubnets | quote }}
 {{- end }}
-image: {{.Values.proxy.image.name}}:{{.Values.proxy.image.version | default .Values.linkerdVersion}}
+image: {{.Values.proxy.image.repository}}:{{.Values.proxy.image.tag}}
 command: ["/usr/lib/linkerd/linkerd2-proxy-init"]
 imagePullPolicy: {{.Values.proxy.image.pullPolicy | default .Values.imagePullPolicy}}
 name: linkerd-init

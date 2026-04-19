@@ -180,7 +180,7 @@ spec:
         {{- with (.Values.identity).experimentalEnv }}
         {{- toYaml . | nindent 8 -}}
         {{- end }}
-        image: {{.Values.controllerImage}}:{{.Values.controllerImageVersion | default .Values.linkerdVersion}}
+        image: {{.Values.controllerImage.repository}}:{{.Values.controllerImage.tag}}
         imagePullPolicy: {{.Values.imagePullPolicy}}
         livenessProbe:
           httpGet:

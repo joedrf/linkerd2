@@ -249,7 +249,7 @@ be used in other contexts.
 {{ if .Values.proxy.experimentalEnv -}}
 {{ toYaml .Values.proxy.experimentalEnv }}
 {{ end -}}
-image: {{.Values.proxy.image.name}}:{{.Values.proxy.image.version | default .Values.linkerdVersion}}
+image: {{.Values.proxy.image.repository}}:{{.Values.proxy.image.tag}}
 imagePullPolicy: {{.Values.proxy.image.pullPolicy | default .Values.imagePullPolicy}}
 livenessProbe:
   httpGet:

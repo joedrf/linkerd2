@@ -232,7 +232,7 @@ spec:
         {{- end }}
         {{- end }}
         {{- include "partials.linkerd.trace" . | nindent 8 -}}
-        image: {{.Values.controllerImage}}:{{.Values.controllerImageVersion | default .Values.linkerdVersion}}
+        image: {{.Values.controllerImage.repository}}:{{.Values.controllerImage.tag}}
         imagePullPolicy: {{.Values.imagePullPolicy}}
         livenessProbe:
           httpGet:
@@ -290,7 +290,7 @@ spec:
         {{- toYaml . | nindent 8 -}}
         {{- end }}
         {{- end }}
-        image: {{.Values.controllerImage}}:{{.Values.controllerImageVersion | default .Values.linkerdVersion}}
+        image: {{.Values.controllerImage.repository}}:{{.Values.controllerImage.tag}}
         imagePullPolicy: {{.Values.imagePullPolicy}}
         livenessProbe:
           httpGet:
@@ -362,7 +362,7 @@ spec:
         {{- range .Values.policyController.experimentalArgs }}
         - {{ . }}
         {{- end }}
-        image: {{ .Values.controllerImage }}:{{ .Values.controllerImageVersion | default .Values.linkerdVersion }}
+        image: {{ .Values.controllerImage.repository }}:{{ .Values.controllerImage.tag }}
         imagePullPolicy: {{ .Values.imagePullPolicy }}
         livenessProbe:
           httpGet:
