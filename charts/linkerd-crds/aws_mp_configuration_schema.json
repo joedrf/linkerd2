@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "description": "Configuration schema for the Linkerd CRDs EKS addon. This addon installs Custom Resource Definitions only and requires no tunable configuration.",
+  "properties": {
+    "installGatewayAPI": {
+      "type": "boolean",
+      "description": "Install the Gateway API CRDs shipped with Linkerd. Disable if another controller in the cluster (AWS Gateway API Controller, Istio, etc.) already owns these CRDs.",
+      "default": false
+    }
+  },
+  "additionalProperties": false
+}

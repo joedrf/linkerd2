@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "description": "Configuration schema for the Linkerd control plane EKS addon.",
+  "properties": {
+    "controllerLogLevel": {
+      "type": "string",
+      "description": "Log level for the control plane components.",
+      "enum": ["debug", "info", "warn", "error"],
+      "default": "info"
+    },
+    "controllerLogFormat": {
+      "type": "string",
+      "description": "Log format for the control plane components.",
+      "enum": ["plain", "json"],
+      "default": "plain"
+    },
+    "enablePodDisruptionBudget": {
+      "type": "boolean",
+      "description": "Create pod disruption budgets for control plane components.",
+      "default": false
+    },
+    "enablePodAntiAffinity": {
+      "type": "boolean",
+      "description": "Enable pod anti-affinity for control plane deployments (HA).",
+      "default": false
+    },
+    "controllerReplicas": {
+      "type": "integer",
+      "description": "Number of replicas for each control plane deployment.",
+      "minimum": 1,
+      "default": 1
+    },
+    "nodeSelector": {
+      "type": "object",
+      "description": "Node selector for control plane pods.",
+      "additionalProperties": { "type": "string" }
+    },
+    "tolerations": {
+      "type": "array",
+      "description": "Tolerations for control plane pods.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "key": { "type": "string" },
+          "operator": { "type": "string" },
+          "value": { "type": "string" },
+          "effect": { "type": "string" },
+          "tolerationSeconds": { "type": "integer" }
+        }
+      }
+    },
+    "priorityClassName": {
+      "type": "string",
+      "description": "Priority class name for control plane pods."
+    },
+    "podAnnotations": {
+      "type": "object",
+      "description": "Additional annotations to add to all pods.",
+      "additionalProperties": { "type": "string" }
+    },
+    "podLabels": {
+      "type": "object",
+      "description": "Additional labels to add to all pods.",
+      "additionalProperties": { "type": "string" }
+    }
+  },
+  "additionalProperties": false
+}
