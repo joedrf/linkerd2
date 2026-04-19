@@ -1,0 +1,53 @@
+{{- if .Values.lifecycleDeployment.enabled -}}
+---
+###
+### Placeholder Deployment for AWS EKS addon lifecycle tracking.
+### The EKS addon framework requires at least one Deployment or DaemonSet
+### per chart to track addon health. The linkerd-crds chart would otherwise
+### only install CustomResourceDefinitions, which the framework cannot
+### observe. This Deployment runs a single pause container and is not
+### intended to perform any work.
+###
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: linkerd-crds-lifecycle
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: linkerd-crds-lifecycle
+    app.kubernetes.io/part-of: linkerd
+    linkerd.io/control-plane-component: linkerd-crds-lifecycle
+spec:
+  replicas: {{ .Values.lifecycleDeployment.replicas }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: linkerd-crds-lifecycle
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: linkerd-crds-lifecycle
+      annotations:
+        linkerd.io/inject: disabled
+    spec:
+      automountServiceAccountToken: false
+      containers:
+      - name: pause
+        image: {{ .Values.lifecycleDeployment.image.repository }}:{{ .Values.lifecycleDeployment.image.tag }}
+        resources:
+          requests:
+            cpu: 10m
+            memory: 8Mi
+          limits:
+            cpu: 20m
+            memory: 16Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 65534
+          runAsGroup: 65534
+          capabilities:
+            drop: ["ALL"]
+          seccompProfile:
+            type: RuntimeDefault
+{{- end }}

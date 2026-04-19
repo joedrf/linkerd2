@@ -2,6 +2,17 @@
 # as a default and can be overridden by the more specific `enable*Routes`
 # values.
 installGatewayAPI: false
+
+# -- Placeholder workload required by the AWS EKS addon framework for
+# lifecycle tracking. CRD-only charts need at least one Deployment or
+# DaemonSet that the framework can watch. Disable only if you are not
+# installing this chart as an EKS addon.
+lifecycleDeployment:
+  enabled: true
+  replicas: 1
+  image:
+    repository: public.ecr.aws/eks-distro/kubernetes/pause
+    tag: "3.10"
 # -- Controls if Linkerd should install the Gateway API HTTPRoutes and
 # GRPCRoutes CRDs. If unspecified, the value of `installGatewayAPI` is used.
 # enableHttpRoutes: false
