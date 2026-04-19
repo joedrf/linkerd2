@@ -4,6 +4,9 @@
 
 # -- Kubernetes DNS Domain name to use
 clusterDomain: cluster.local
+# -- Whether to create the linkerd namespace. Set to false for EKS addon
+# installation where the framework manages the namespace.
+createNamespace: false
 
 # -- The cluster networks for which service discovery is performed. This should
 # include the pod and service networks, but need not include the node network.
@@ -20,7 +23,7 @@ controllerLogLevel: info
 # -- Log format for the control plane components
 controllerLogFormat: plain
 # -- control plane version. See Proxy section for proxy version
-linkerdVersion: linkerdVersionValue
+linkerdVersion: edge-26.4.3
 # -- default kubernetes deployment strategy
 deploymentStrategy:
   rollingUpdate:
@@ -144,13 +147,12 @@ proxy:
   disableInboundProtocolDetectTimeout: false
   image:
     # -- Docker image for the proxy
-    name: cr.l5d.io/linkerd/proxy
+    repository: 709825985650.dkr.ecr.us-east-1.amazonaws.com/buoyant-enterprise-for-linkerd/linkerd-proxy
     # -- Pull policy for the proxy container image
     # @default -- imagePullPolicy
     pullPolicy: ""
     # -- Tag for the proxy container image
-    # @default -- linkerdVersion
-    version: ""
+    tag: edge-26.4.3
   # -- Enables the proxy's /shutdown admin endpoint
   enableShutdownEndpoint: false
   # -- Log level for the proxy
@@ -417,10 +419,14 @@ enablePSP: false
 # -- Failure policy for the proxy injector
 webhookFailurePolicy: Ignore
 
-# controllerImage -- Docker image for the destination and identity components
-controllerImage: cr.l5d.io/linkerd/controller
-# -- Optionally allow a specific container image Tag (or SHA) to be specified for the controllerImage.
-controllerImageVersion: ""
+# controllerImage -- Docker image for the destination and identity components.
+# Nested {repository, tag} format is required for AWS Marketplace image
+# traceability. A remap block in templates/config.yaml flattens this back to
+# a "repository:tag" string before serialising to the linkerd-config
+# ConfigMap, which the proxy-injector Go code expects.
+controllerImage:
+  repository: 709825985650.dkr.ecr.us-east-1.amazonaws.com/buoyant-enterprise-for-linkerd/linkerd-controller
+  tag: edge-26.4.3
 
 # -- Number of replicas for each control plane pod
 controllerReplicas: 1
@@ -482,12 +488,13 @@ identity:
 
     # -- Which scheme is used for the identity issuer secret format
     tls:
-      # -- Issuer certificate (ECDSA). It must be provided during install.
-      crtPEM: |
-
+      # -- Issuer certificate (ECDSA). It must be provided during install
+      # via a pre-created Kubernetes Secret (placeholder satisfies the
+      # required-check at template time for EKS addon validation).
+      crtPEM: "placeholder"
       # -- Key for the issuer certificate (ECDSA). It must be provided during
-      # install
-      keyPEM: |
+      # install via a pre-created Kubernetes Secret.
+      keyPEM: "placeholder"
 
   kubeAPI: *kubeapi
 

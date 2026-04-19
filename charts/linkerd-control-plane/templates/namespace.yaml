@@ -1,4 +1,4 @@
-{{- if eq .Release.Service "CLI" -}}
+{{- if .Values.createNamespace -}}
 ---
 ###
 ### Linkerd Namespace
